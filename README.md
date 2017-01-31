@@ -1,2 +1,2 @@
-# RxJs
-repo for http://funkyjavascript.com/rxjs
+# Generators
+repo for http://funkyjavascript.com/generators
