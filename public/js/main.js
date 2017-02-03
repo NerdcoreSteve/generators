@@ -16101,7 +16101,7 @@ module.exports = function () {
     }),
         gen1 = starFunction();
 
-    R.range(1, 3).forEach(function () {
+    R.range(0, 2).forEach(function () {
         return console.log(gen1.next());
     });
     /*
@@ -16110,29 +16110,28 @@ module.exports = function () {
         { value: undefined, done: true }
     */
 
-    //we can use while and for loops here too
+    //You can yield more than once in a generator
     var gen2 = regeneratorRuntime.mark(function _callee() {
-        var i;
         return regeneratorRuntime.wrap(function _callee$(_context2) {
             while (1) {
                 switch (_context2.prev = _context2.next) {
                     case 0:
-                        i = 0;
+                        _context2.next = 2;
+                        return 'you';
 
-                    case 1:
-                        if (!(i < 3)) {
-                            _context2.next = 6;
-                            break;
-                        }
-
+                    case 2:
                         _context2.next = 4;
-                        return i++;
+                        return 'are';
 
                     case 4:
-                        _context2.next = 1;
-                        break;
+                        _context2.next = 6;
+                        return 'a';
 
                     case 6:
+                        _context2.next = 8;
+                        return 'potato';
+
+                    case 8:
                     case 'end':
                         return _context2.stop();
                 }
@@ -16140,23 +16139,25 @@ module.exports = function () {
         }, _callee, this);
     })(),
         runGen = function runGen(n, gen) {
-        return R.range(1, n).forEach(function () {
+        return R.range(0, n).forEach(function () {
             return console.log(gen.next().value);
         });
     };
 
-    runGen(6, gen2);
+    runGen(4, gen2);
     /*
         prints:
-        0
-        1
-        2
-        undefined
-        undefined
+        you
+        are
+        a
+        potato
     */
 
-    //In fact, we can loop a generator forever
-    var gen3 = regeneratorRuntime.mark(function _callee2() {
+    //we can use while and for loops here too
+    var makeGenerator = function makeGenerator(starFunction) {
+        return starFunction();
+    },
+        gen3 = makeGenerator(regeneratorRuntime.mark(function _callee2() {
         var i;
         return regeneratorRuntime.wrap(function _callee2$(_context3) {
             while (1) {
@@ -16165,7 +16166,7 @@ module.exports = function () {
                         i = 0;
 
                     case 1:
-                        if (!true) {
+                        if (!(i < 3)) {
                             _context3.next = 6;
                             break;
                         }
@@ -16183,9 +16184,49 @@ module.exports = function () {
                 }
             }
         }, _callee2, this);
-    })();
+    }));
 
-    runGen(6, gen3);
+    runGen(5, gen3);
+    /*
+        prints:
+        0
+        1
+        2
+        undefined
+        undefined
+    */
+
+    //In fact, we can loop a generator forever
+    var gen4 = makeGenerator(regeneratorRuntime.mark(function _callee3() {
+        var i;
+        return regeneratorRuntime.wrap(function _callee3$(_context4) {
+            while (1) {
+                switch (_context4.prev = _context4.next) {
+                    case 0:
+                        i = 0;
+
+                    case 1:
+                        if (!true) {
+                            _context4.next = 6;
+                            break;
+                        }
+
+                        _context4.next = 4;
+                        return i++;
+
+                    case 4:
+                        _context4.next = 1;
+                        break;
+
+                    case 6:
+                    case 'end':
+                        return _context4.stop();
+                }
+            }
+        }, _callee3, this);
+    }));
+
+    runGen(5, gen4);
     /*
         prints:
         0
@@ -16193,6 +16234,78 @@ module.exports = function () {
         2
         3
         4
+    */
+
+    //You can also use yeild* on arrays and other generators
+    var gen5 = makeGenerator(regeneratorRuntime.mark(function _callee4() {
+        return regeneratorRuntime.wrap(function _callee4$(_context5) {
+            while (1) {
+                switch (_context5.prev = _context5.next) {
+                    case 0:
+                        _context5.next = 2;
+                        return 'here\'s a list';
+
+                    case 2:
+                        return _context5.delegateYield(['this', 'is', 'in', 'the', 'list'], 't0', 3);
+
+                    case 3:
+                        _context5.next = 5;
+                        return 'here\'s stuff from another generator';
+
+                    case 5:
+                        return _context5.delegateYield(gen3, 't1', 6);
+
+                    case 6:
+                        _context5.next = 8;
+                        return 'this next one goes on forever';
+
+                    case 8:
+                        return _context5.delegateYield(gen4, 't2', 9);
+
+                    case 9:
+                    case 'end':
+                        return _context5.stop();
+                }
+            }
+        }, _callee4, this);
+    }));
+
+    runGen(11, gen5);
+    /*
+        prints:
+        here's a list
+        this
+        is
+        in
+        the
+        list
+        here's stuff from another generator
+        this is the end
+        5
+        6
+        7
+    */
+
+    //Here's an interesting thing you can do with generators
+    var powerGenerator = regeneratorRuntime.mark(function powerGenerator(y) {
+        return regeneratorRuntime.wrap(function powerGenerator$(_context6) {
+            while (1) {
+                switch (_context6.prev = _context6.next) {
+                    case 0:
+                        _context6.next = 2;
+                        return y * y;
+
+                    case 2:
+                    case 'end':
+                        return _context6.stop();
+                }
+            }
+        }, powerGenerator, this);
+    });
+    console.log(powerGenerator(2).next().value);
+    /*
+    prints
+    4
     */
 };
 
