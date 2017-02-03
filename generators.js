@@ -76,8 +76,7 @@ module.exports = () => {
             yield 'here\'s a list'
             yield* ['this', 'is', 'in', 'the', 'list']
             yield 'here\'s stuff from another generator'
-            //TODO this isn't doing what I want
-            yield* gen3
+            yield* (function* () { var i = 0; while(i < 3) yield i++ })()
             yield 'this next one goes on forever'
             yield* gen4
         })
