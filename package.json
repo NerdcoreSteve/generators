@@ -19,7 +19,8 @@
   "dependencies": {
     "babelify": "^7.3.0",
     "express": "^4.14.0",
-    "pug": "^2.0.0-beta6"
+    "pug": "^2.0.0-beta6",
+    "ramda": "^0.23.0"
   },
   "devDependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
