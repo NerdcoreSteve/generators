@@ -16080,6 +16080,7 @@ module.exports = require('./modules/_core');
 },{}],300:[function(require,module,exports){
 'use strict';
 
+//TODO re-confirm what gets printed out
 var R = require('ramda');
 
 module.exports = function () {
@@ -16237,37 +16238,64 @@ module.exports = function () {
     */
 
     //You can also use yeild* on arrays and other generators
-    var gen5 = makeGenerator(regeneratorRuntime.mark(function _callee4() {
-        return regeneratorRuntime.wrap(function _callee4$(_context5) {
+    var gen5 = makeGenerator(regeneratorRuntime.mark(function _callee5() {
+        return regeneratorRuntime.wrap(function _callee5$(_context6) {
             while (1) {
-                switch (_context5.prev = _context5.next) {
+                switch (_context6.prev = _context6.next) {
                     case 0:
-                        _context5.next = 2;
+                        _context6.next = 2;
                         return 'here\'s a list';
 
                     case 2:
-                        return _context5.delegateYield(['this', 'is', 'in', 'the', 'list'], 't0', 3);
+                        return _context6.delegateYield(['this', 'is', 'in', 'the', 'list'], 't0', 3);
 
                     case 3:
-                        _context5.next = 5;
+                        _context6.next = 5;
                         return 'here\'s stuff from another generator';
 
                     case 5:
-                        return _context5.delegateYield(gen3, 't1', 6);
+                        return _context6.delegateYield(regeneratorRuntime.mark(function _callee4() {
+                            var i;
+                            return regeneratorRuntime.wrap(function _callee4$(_context5) {
+                                while (1) {
+                                    switch (_context5.prev = _context5.next) {
+                                        case 0:
+                                            i = 0;
+
+                                        case 1:
+                                            if (!(i < 3)) {
+                                                _context5.next = 6;
+                                                break;
+                                            }
+
+                                            _context5.next = 4;
+                                            return i++;
+
+                                        case 4:
+                                            _context5.next = 1;
+                                            break;
+
+                                        case 6:
+                                        case 'end':
+                                            return _context5.stop();
+                                    }
+                                }
+                            }, _callee4, this);
+                        })(), 't1', 6);
 
                     case 6:
-                        _context5.next = 8;
+                        _context6.next = 8;
                         return 'this next one goes on forever';
 
                     case 8:
-                        return _context5.delegateYield(gen4, 't2', 9);
+                        return _context6.delegateYield(gen4, 't2', 9);
 
                     case 9:
                     case 'end':
-                        return _context5.stop();
+                        return _context6.stop();
                 }
             }
-        }, _callee4, this);
+        }, _callee5, this);
     }));
 
     runGen(11, gen5);
@@ -16287,25 +16315,86 @@ module.exports = function () {
     */
 
     //Here's an interesting thing you can do with generators
-    var powerGenerator = regeneratorRuntime.mark(function powerGenerator(y) {
-        return regeneratorRuntime.wrap(function powerGenerator$(_context6) {
+    var multGenerator = regeneratorRuntime.mark(function multGenerator(y) {
+        return regeneratorRuntime.wrap(function multGenerator$(_context7) {
             while (1) {
-                switch (_context6.prev = _context6.next) {
+                switch (_context7.prev = _context7.next) {
                     case 0:
-                        _context6.next = 2;
+                        _context7.next = 2;
                         return y * y;
 
                     case 2:
                     case 'end':
-                        return _context6.stop();
+                        return _context7.stop();
                 }
             }
-        }, powerGenerator, this);
+        }, multGenerator, this);
+    }),
+        add3Generator = regeneratorRuntime.mark(function add3Generator(a, b, c) {
+        return regeneratorRuntime.wrap(function add3Generator$(_context8) {
+            while (1) {
+                switch (_context8.prev = _context8.next) {
+                    case 0:
+                        _context8.next = 2;
+                        return a + b + c;
+
+                    case 2:
+                    case 'end':
+                        return _context8.stop();
+                }
+            }
+        }, add3Generator, this);
     });
-    console.log(powerGenerator(2).next().value);
+    console.log(multGenerator(2).next().value);
+    console.log(add3Generator(1, 2, 3).next().value);
     /*
     prints
     4
+    6
+    */
+
+    //You can also pass stuff to next
+    var usesNext = regeneratorRuntime.mark(function _callee6() {
+        return regeneratorRuntime.wrap(function _callee6$(_context9) {
+            while (1) {
+                switch (_context9.prev = _context9.next) {
+                    case 0:
+                        console.log('start');
+
+                    case 1:
+                        if (!true) {
+                            _context9.next = 9;
+                            break;
+                        }
+
+                        _context9.t0 = console;
+                        _context9.next = 5;
+                        return;
+
+                    case 5:
+                        _context9.t1 = _context9.sent;
+
+                        _context9.t0.log.call(_context9.t0, _context9.t1);
+
+                        _context9.next = 1;
+                        break;
+
+                    case 9:
+                    case 'end':
+                        return _context9.stop();
+                }
+            }
+        }, _callee6, this);
+    })();
+
+    usesNext.next();
+    usesNext.next('stuff');
+    usesNext.next('things');
+    /*
+    prints
+    start
+    stuff
+    things
     */
 };
 

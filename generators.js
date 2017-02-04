@@ -1,3 +1,4 @@
+//TODO re-confirm what gets printed out
 const
     R = require('ramda')
 
@@ -99,12 +100,34 @@ module.exports = () => {
 
     //Here's an interesting thing you can do with generators
     const
-        powerGenerator = function* (y) {
+        multGenerator = function* (y) {
            yield y * y
+        },
+        add3Generator = function* (a, b, c) {
+            yield a + b + c
         }
-        console.log(powerGenerator(2).next().value)
-        /*
-        prints
-        4
-        */
+    console.log(multGenerator(2).next().value)
+    console.log(add3Generator(1, 2, 3).next().value)
+    /*
+    prints
+    4
+    6
+    */
+
+    //You can also pass stuff to next
+    const
+        usesNext = (function* () {
+            console.log('start')
+            while(true) console.log(yield)
+        })()
+
+    usesNext.next()
+    usesNext.next('stuff')
+    usesNext.next('things')
+    /*
+    prints
+    start
+    stuff
+    things
+    */
 }
