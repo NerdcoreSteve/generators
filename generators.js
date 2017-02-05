@@ -17,6 +17,8 @@ module.exports = () => {
         { value: undefined, done: true }
     */
 
+    console.log('**************')
+
     //You can yield more than once in a generator
     const
         gen2 = (function* () {
@@ -36,6 +38,8 @@ module.exports = () => {
         potato
     */
 
+    console.log('**************')
+
     //we can use while and for loops here too
     const
         makeGenerator = starFunction => starFunction(),
@@ -54,6 +58,8 @@ module.exports = () => {
         undefined
     */
 
+    console.log('**************')
+
     //In fact, we can loop a generator forever
     const
         gen4 = makeGenerator(function* () {
@@ -71,6 +77,8 @@ module.exports = () => {
         4
     */
 
+    console.log('**************')
+
     //You can also use yeild* on arrays and other generators
     const
         gen5 = makeGenerator(function* () {
@@ -79,10 +87,10 @@ module.exports = () => {
             yield 'here\'s stuff from another generator'
             yield* (function* () { var i = 0; while(i < 3) yield i++ })()
             yield 'this next one goes on forever'
-            yield* gen4
+            yield* (function* () { var i = 0; while(true) yield i++ })()
         })
 
-        runGen(11, gen5)
+        runGen(15, gen5)
     /*
         prints:
         here's a list
@@ -92,11 +100,17 @@ module.exports = () => {
         the
         list
         here's stuff from another generator
-        this is the end
-        5
-        6
-        7
+        0
+        1
+        2
+        this next one goes on forever
+        0
+        1
+        2
+        3
     */
+
+    console.log('**************')
 
     //Here's an interesting thing you can do with generators
     const
@@ -107,27 +121,33 @@ module.exports = () => {
             yield a + b + c
         }
     console.log(multGenerator(2).next().value)
+    console.log(multGenerator(4).next().value)
     console.log(add3Generator(1, 2, 3).next().value)
+    console.log(add3Generator(4, 5, 6).next().value)
     /*
-    prints
-    4
-    6
+        prints
+        4
+        16
+        6
+        15
     */
+
+    console.log('**************')
 
     //You can also pass stuff to next
     const
-        usesNext = (function* () {
+        usesNext = makeGenerator(function* () {
             console.log('start')
             while(true) console.log(yield)
-        })()
+        })
 
     usesNext.next()
     usesNext.next('stuff')
     usesNext.next('things')
     /*
-    prints
-    start
-    stuff
-    things
+        prints
+        start
+        stuff
+        things
     */
 }
